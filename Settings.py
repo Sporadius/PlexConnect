@@ -17,10 +17,13 @@ Intercept: Trailers-trailers.apple.com, WSJ-secure.marketwatch.com, iMovie-www.i
 HTTP: port_webserver - override when using webserver + forwarding to PlexConnect
 HTTPS: port_ssl, certfile, enable_webserver_ssl - configure SSL portion or webserver
 """
+
+#SPORADIUS: Added mac_pms value to store the Plex server MAC address needed to WakeOnLan(WOL)
 g_settings = { \
     'enable_plexgdm'  :('True', 'False'), \
     'ip_pms'          :('192.168.178.10',), \
     'port_pms'        :('32400',), \
+    'mac_pms'         :('',), \
     \
     'enable_dnsserver':('True', 'False'), \
     'port_dnsserver'  :('53',), \
