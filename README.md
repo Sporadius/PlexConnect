@@ -1,3 +1,20 @@
+# PlexConnect - WakeOnLan(WOL) version
+
+I was in need of a solution to wake my Plex Media Server from S3 sleep state with WakeOnLan(WOL). My PlexConnect is running on my Raspberry PI as a daemon and my PMS is on my NAS. Now PlexConnect wakes the NAS.
+
+Prerequisites on the PlexConnect host:
+* Linux 
+* The wakeonlan utility (apt-get install wakeonlan)
+
+Prerequisite settings in the Settings.cfg file:
+* Run PlexConnect.py one time to get the Settings.cfg file
+* Edit the Settings.cfg file to have these settings
+    - enable_PlexGDM = False
+    - ip_pms = set to the Plex server ip address 
+    - mac_pms = set to the Plex server mac address
+
+All credits for PlexConnect go to the initiators below!
+
 # PlexConnect
 or: "Plex @ aTV - think different..."
 
