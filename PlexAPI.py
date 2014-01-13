@@ -33,6 +33,9 @@ import sys
 import struct
 import time
 import urllib2, socket
+#SPORADIUS: need additional modules to call WakeOnLan(WOL) tool
+import os
+import subprocess
 
 try:
     import xml.etree.cElementTree as etree
@@ -232,19 +235,35 @@ def discoverPMS(ATV_udid, CSettings, MyPlexToken=''):
     # local PMS
     if CSettings.getSetting('enable_plexgdm')=='False':
         # defined in setting.cfg
+        # SPORADIUS: Plex server is set manually, check if we need to wake on lan (WOL)
+        mac = CSettings.getSetting('mac_pms')
         ip = CSettings.getSetting('ip_pms')
         port = CSettings.getSetting('port_pms')
+        if mac:
+                #The mac_pms setting has a value so we assume WakeOnLan(WOL)
+                with open(os.devnull, "wb") as limbo:
+                        #First ping the ip_pms. If it is not alive we will move on
+                        result=subprocess.Popen(["ping", "-c", "1", "-n", "-W", "2", ip],
+                                stdout=limbo, stderr=limbo).wait()
+                        if result:
+                                #ip_pms does not respond so we call the wakeonlan tool with the value mac_pms
+                                os.system("wakeonlan "+mac)
+                                #after the wakeonlan tool has send the awake command we need to wait for the system to startup
+                                time.sleep(15)
+                        else:
+                                #the ip_pms is already active so we do nothing
+                                print "Already active, no wake on LAN needed."
         XML = getXMLFromPMS('http://'+ip+':'+port, '/servers', None, '')
-        
+
         if XML==False:
             pass  # no response from manual defined server (Settings.cfg)
         else:
             Server = XML.find('Server')
             uuid = Server.get('machineIdentifier')
             name = Server.get('name')
-            
+
             declarePMS(ATV_udid, uuid, name, 'http', ip, port)  # dflt: token='', local, owned
-    
+            
     else:
         # PlexGDM
         PMS_list = PlexGDM()
