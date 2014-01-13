@@ -13,6 +13,14 @@ Prerequisite settings in the Settings.cfg file:
     - ip_pms = set to the Plex server ip address 
     - mac_pms = set to the Plex server mac address
 
+Some suggestions for the Plex Media Server to go into sleep state:
+* You will need pm-utils (pm-suspend command will put the system in S3 sleep state)
+* Your bios needs to support S3 state and WOL and it needs to be enabled
+* You will need to run the command "sudo ethtool -s eth0 wol g" somewhere at boot time (change eth0 to your card name) This will activate teh WOL on the OS
+* You will need to make a script that needs to be scheduled in crontab that calls pm-suspend. Examples:
+    - at specific times (eg 11pm)
+    - when the system has no load on disks/cpu/logins
+
 All credits for PlexConnect go to the initial programmers!
 
 # PlexConnect
